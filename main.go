@@ -13,13 +13,23 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 const userKey = "user"
 
 var secret = []byte(os.Getenv("SECRET"))
 
+var port, port_exists = os.LookupEnv("PORT")
+
+func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
+
 func main() {
+	fmt.Print(port)
 	r := engine()
 	r.Use(gin.Logger())
 	if err := engine().Run(":8080"); err != nil {
