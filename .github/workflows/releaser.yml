@@ -1,9 +1,6 @@
 name: Goreleaser
 
-on:
-  push:
-    tags:
-      - '*'
+on: workflow_dispatch
 
 permissions: read-all
 
