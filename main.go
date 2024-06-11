@@ -20,11 +20,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type SavedImage struct {
-	data     []byte `redis:"data"`
-	mimeType string `redis:"mime_type"`
-}
-
 const userKey = "user"
 
 var secret = []byte(os.Getenv("SECRET"))
