@@ -84,7 +84,7 @@ func getServeImage(c *gin.Context, rdb *redis.Client, ctx context.Context) {
 
 	filePath = replacer.Replace(filePath)
 
-	filePath = "./public/" + filePath
+	filePath = "/public/" + filePath
 
 	result, err := rdb.Get(ctx, filePath).Result()
 	if err != nil {
