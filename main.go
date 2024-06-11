@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/TwiN/go-color"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/redis/go-redis/v9"
 	_ "io"
@@ -31,7 +32,7 @@ var ctx = context.Background()
 
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
+		fmt.Println(color.Ize(color.White, "No .env was found!"))
 	}
 }
 
@@ -128,7 +129,7 @@ func postImage(c *gin.Context) {
 			return
 		}
 
-		c.JSON(200, "{\"url\":\"https://img.kono.services/ss/%s\"}"+file.Filename)
+		c.JSON(200, fmt.Sprintf("{\"url\":\"https://img.kono.services/ss/%s\"}"+file.Filename))
 	} else {
 		c.Status(400)
 	}
@@ -185,4 +186,8 @@ func logout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
+}
+
+func console() {
+
 }
