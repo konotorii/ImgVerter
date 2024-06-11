@@ -1,14 +1,18 @@
 package main
 
-//import "github.com/sunshineplan/imgconv"
-
 import (
+	"context"
 	"fmt"
+	"github.com/gabriel-vasile/mimetype"
+	"github.com/redis/go-redis/v9"
 	_ "io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -16,11 +20,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type SavedImage struct {
+	data     []byte `redis:"data"`
+	mimeType string `redis:"mime_type"`
+}
+
 const userKey = "user"
 
 var secret = []byte(os.Getenv("SECRET"))
 
-var port, port_exists = os.LookupEnv("PORT")
+var port, port_exists = strconv.Atoi(os.Getenv("PORT"))
 
 func init() {
 	if err := godotenv.Load(); err != nil {
@@ -29,6 +38,7 @@ func init() {
 }
 
 func main() {
+
 	fmt.Print(port)
 	r := engine()
 	r.Use(gin.Logger())
@@ -38,11 +48,23 @@ func main() {
 }
 
 func engine() *gin.Engine {
+	ctx := context.Background()
 	r := gin.New()
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_ADD"),
+		Password: os.Getenv("REDIS_PAS"),
+		DB:       1,
+	})
+
+	status, err := rdb.Ping(ctx).Result()
+	if err != nil {
+		log.Fatalln("Redis connection was refused")
+	}
+	fmt.Println(status)
 
 	r.Use(sessions.Sessions("session", cookie.NewStore(secret)))
 
-	r.GET("/img", getServeImage)
+	r.GET("/img", func(c *gin.Context) { getServeImage(c, rdb, ctx) })
 	r.POST("/login", login)
 	r.GET("/logout", logout)
 
@@ -55,7 +77,41 @@ func engine() *gin.Engine {
 	return r
 }
 
-func getServeImage(c *gin.Context) {
+func getServeImage(c *gin.Context, rdb *redis.Client, ctx context.Context) {
+	filePath := c.Query("path")
+
+	replacer := strings.NewReplacer("'", "")
+
+	filePath = replacer.Replace(filePath)
+
+	filePath = "./public/" + filePath
+
+	result, err := rdb.Get(ctx, filePath).Result()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Couldn't find image.")
+		buf, err := ioutil.ReadFile(filePath)
+
+		if err != nil {
+			fmt.Println("Reading file error", err)
+
+			c.Status(500)
+		}
+
+		mtype, err := mimetype.DetectFile(filePath)
+
+		if err != nil {
+			fmt.Println("Getting mimetype error", err)
+
+			c.Status(500)
+		}
+
+		rdb.Set(ctx, filePath, buf, 30*time.Minute)
+
+		c.Data(200, mtype.String(), buf)
+	} else {
+		c.Data(200, "", []byte(result))
+	}
 
 }
 
