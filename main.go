@@ -68,6 +68,8 @@ func engine() *gin.Engine {
 	r.POST("/login", login)
 	r.GET("/logout", logout)
 
+	r.POST("/upload", postImage)
+
 	admin := r.Group("/admin")
 	admin.Use(AuthRequired)
 	{
@@ -116,14 +118,23 @@ func getServeImage(c *gin.Context, rdb *redis.Client, ctx context.Context) {
 }
 
 func postImage(c *gin.Context) {
-	// Single file
-	file, _ := c.FormFile("file")
-	log.Println(file.Filename)
+	key := c.Query("key")
 
-	// Upload the file to specific dst.
-	c.SaveUploadedFile(file, "./public")
+	if key == os.Getenv("key") {
+		// Single file
+		file, _ := c.FormFile("file")
+		log.Println(file.Filename)
 
-	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+		// Upload the file to specific dst.
+		err := c.SaveUploadedFile(file, "/public/ss")
+		if err != nil {
+			return
+		}
+
+		c.JSON(200, "{\"url\":\"https://img.kono.services/ss/%s\"}"+file.Filename)
+	} else {
+		c.Status(400)
+	}
 }
 
 func AuthRequired(c *gin.Context) {
