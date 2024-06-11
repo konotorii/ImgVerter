@@ -31,6 +31,9 @@ var secret = []byte(os.Getenv("SECRET"))
 
 var port, port_exists = strconv.Atoi(os.Getenv("PORT"))
 
+var rdb *redis.Client
+var ctx = context.Background()
+
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found")
@@ -48,9 +51,8 @@ func main() {
 }
 
 func engine() *gin.Engine {
-	ctx := context.Background()
 	r := gin.New()
-	rdb := redis.NewClient(&redis.Options{
+	rdb = redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_ADD"),
 		Password: os.Getenv("REDIS_PAS"),
 		DB:       1,
@@ -64,7 +66,7 @@ func engine() *gin.Engine {
 
 	r.Use(sessions.Sessions("session", cookie.NewStore(secret)))
 
-	r.GET("/img", func(c *gin.Context) { getServeImage(c, rdb, ctx) })
+	r.GET("/img", getServeImage)
 	r.POST("/login", login)
 	r.GET("/logout", logout)
 
@@ -79,7 +81,7 @@ func engine() *gin.Engine {
 	return r
 }
 
-func getServeImage(c *gin.Context, rdb *redis.Client, ctx context.Context) {
+func getServeImage(c *gin.Context) {
 	filePath := c.Query("path")
 
 	replacer := strings.NewReplacer("'", "")
