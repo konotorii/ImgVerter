@@ -19,6 +19,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/konotorii/go-consola"
 )
 
 const userKey = "user"
@@ -58,7 +59,7 @@ func engine() *gin.Engine {
 	if err != nil {
 		log.Fatalln("Redis connection was refused")
 	}
-	fmt.Println(status)
+	consola.log(status)
 
 	r.Use(sessions.Sessions("session", cookie.NewStore(secret)))
 
