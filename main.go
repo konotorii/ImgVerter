@@ -8,7 +8,6 @@ import (
 	"github.com/redis/go-redis/v9"
 	_ "io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -43,7 +42,7 @@ func main() {
 	r := engine()
 	r.Use(gin.Logger())
 	if err := engine().Run(":8080"); err != nil {
-		log.Fatal("unable to start:", err)
+		consola.Error("unable to start:", err)
 	}
 }
 
@@ -57,9 +56,9 @@ func engine() *gin.Engine {
 
 	status, err := rdb.Ping(ctx).Result()
 	if err != nil {
-		log.Fatalln("Redis connection was refused")
+		consola.Error("Redis connection was refused")
 	}
-	consola.log(status)
+	consola.Log(status)
 
 	r.Use(sessions.Sessions("session", cookie.NewStore(secret)))
 
@@ -89,12 +88,12 @@ func getServeImage(c *gin.Context) {
 
 	result, err := rdb.Get(ctx, filePath).Result()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Couldn't find image.")
+		consola.Error(err)
+		consola.Warning("Couldn't find image.")
 		buf, err := ioutil.ReadFile(filePath)
 
 		if err != nil {
-			fmt.Println("Reading file error", err)
+			consola.Error("Reading file error", err)
 
 			c.Status(500)
 		}
@@ -102,7 +101,7 @@ func getServeImage(c *gin.Context) {
 		mtype, err := mimetype.DetectFile(filePath)
 
 		if err != nil {
-			fmt.Println("Getting mimetype error", err)
+			consola.Error("Getting mimetype error", err)
 
 			c.Status(500)
 		}
@@ -122,7 +121,7 @@ func postImage(c *gin.Context) {
 	if key == os.Getenv("key") {
 		// Single file
 		file, _ := c.FormFile("file")
-		log.Println(file.Filename)
+		consola.Log(file.Filename)
 
 		// Upload the file to specific dst.
 		err := c.SaveUploadedFile(file, "/public/ss")
@@ -187,8 +186,4 @@ func logout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
-}
-
-func console() {
-
 }
