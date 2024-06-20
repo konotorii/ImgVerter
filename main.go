@@ -124,13 +124,13 @@ func postImage(c *gin.Context) {
 		consola.Log(file.Filename)
 
 		// Upload the file to specific dst.
-		err := c.SaveUploadedFile(file, "/public/screenshots")
+		err := c.SaveUploadedFile(file, "./public/screenshots/"+file.Filename)
 		if err != nil {
 			consola.Error(err)
 			c.Status(500)
 		}
 
-		c.JSON(200, gin.H{"url": fmt.Sprintf("https://img.kono.services/img?path=screenshots/%p", file.Filename)})
+		c.JSON(200, gin.H{"url": fmt.Sprintf("https://img.kono.services/img?path=screenshots/" + file.Filename)})
 	} else {
 		c.Status(400)
 	}
