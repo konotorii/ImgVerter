@@ -118,7 +118,7 @@ func getServeImage(c *gin.Context) {
 func postImage(c *gin.Context) {
 	key := c.Query("key")
 
-	if key == os.Getenv("key") {
+	if key == os.Getenv("KEY") {
 		// Single file
 		file, _ := c.FormFile("file")
 		consola.Log(file.Filename)
@@ -126,10 +126,11 @@ func postImage(c *gin.Context) {
 		// Upload the file to specific dst.
 		err := c.SaveUploadedFile(file, "/public/ss")
 		if err != nil {
-			return
+			consola.Error(err)
+			c.Status(500)
 		}
 
-		c.JSON(200, fmt.Sprintf("{\"url\":\"https://img.kono.services/ss/%s\"}"+file.Filename))
+		c.JSON(200, fmt.Sprintf("{\"url\":\"https://img.kono.services/ss/%s\"}", file.Filename))
 	} else {
 		c.Status(400)
 	}
