@@ -62,19 +62,79 @@ func engine() *gin.Engine {
 
 	r.Use(sessions.Sessions("session", cookie.NewStore(secret)))
 
+	// Handle long routes
+	r.GET("/:fileId1", getServeFile)
+	r.GET("/:fileId1/:fileId2", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3/:fileId4", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3/:fileId4/:fileId5", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3/:fileId4/:fileId5/:fileId6", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3/:fileId4/:fileId5/:fileId6/:fileId7", getServeFile)
+	r.GET("/:fileId1/:fileId2/:fileId3/:fileId4/:fileId5/:fileId6/:fileId7/:fileId8", getServeFile)
+
 	r.GET("/img", getServeImage)
 	r.POST("/login", login)
 	r.GET("/logout", logout)
 
-	r.POST("/upload", postImage)
+	r.POST("/upload", postScreenshot)
 
 	admin := r.Group("/admin")
 	admin.Use(AuthRequired)
 	{
-		admin.POST("/upload", postImage)
+		admin.POST("/upload", postScreenshot)
 	}
 
 	return r
+}
+
+func getServeFile(c *gin.Context) {
+	fileId1 := c.Param("fileId1")
+	fileId2 := c.Param("fileId2")
+	fileId3 := c.Param("fileId3")
+	fileId4 := c.Param("fileId4")
+	fileId5 := c.Param("fileId5")
+	fileId6 := c.Param("fileId6")
+	fileId7 := c.Param("fileId7")
+	fileId8 := c.Param("fileId8")
+
+	filePath := "/public/"
+
+	if len(fileId1) > 0 {
+		filePath = filePath + fileId1
+	}
+	if len(fileId2) > 0 {
+		filePath = filePath + "/" + fileId2
+	}
+	if len(fileId3) > 0 {
+		filePath = filePath + "/" + fileId3
+	}
+	if len(fileId4) > 0 {
+		filePath = filePath + "/" + fileId4
+	}
+	if len(fileId5) > 0 {
+		filePath = filePath + "/" + fileId5
+	}
+	if len(fileId6) > 0 {
+		filePath = filePath + "/" + fileId6
+	}
+	if len(fileId7) > 0 {
+		filePath = filePath + "/" + fileId7
+	}
+	if len(fileId8) > 0 {
+		filePath = filePath + "/" + fileId8
+	}
+
+	mtype, err := mimetype.DetectFile(filePath)
+
+	if err != nil {
+		consola.Error("Getting mimetype error", err)
+
+		c.Status(500)
+	}
+
+	buf, err := ioutil.ReadFile(filePath)
+
+	c.Data(200, mtype.String(), buf)
 }
 
 func getServeImage(c *gin.Context) {
@@ -116,6 +176,14 @@ func getServeImage(c *gin.Context) {
 }
 
 func postImage(c *gin.Context) {
+
+}
+
+func postVideo(c *gin.Context) {
+
+}
+
+func postFile(c *gin.Context) {
 	key := c.Query("key")
 
 	if key == os.Getenv("KEY") {
@@ -124,13 +192,34 @@ func postImage(c *gin.Context) {
 		consola.Log(file.Filename)
 
 		// Upload the file to specific dst.
-		err := c.SaveUploadedFile(file, "./public/screenshots/"+file.Filename)
+		err := c.SaveUploadedFile(file, "/public/download/"+file.Filename)
 		if err != nil {
 			consola.Error(err)
 			c.Status(500)
 		}
 
-		c.JSON(200, gin.H{"url": fmt.Sprintf("https://img.kono.services/img?path=screenshots/" + file.Filename)})
+		c.JSON(200, gin.H{"url": fmt.Sprintf("https://img.kono.services/download/" + file.Filename)})
+	} else {
+		c.Status(400)
+	}
+}
+
+func postScreenshot(c *gin.Context) {
+	key := c.Query("key")
+
+	if key == os.Getenv("KEY") {
+		// Single file
+		file, _ := c.FormFile("file")
+		consola.Log("Uploaded file: " + file.Filename)
+
+		// Upload the file to specific dst.
+		err := c.SaveUploadedFile(file, "/public/ss/"+file.Filename)
+		if err != nil {
+			consola.Error(err)
+			c.Status(500)
+		}
+
+		c.JSON(200, gin.H{"url": fmt.Sprintf("https://img.kono.services/ss/" + file.Filename)})
 	} else {
 		c.Status(400)
 	}
