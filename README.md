@@ -1,22 +1,33 @@
 # ImgVerter
 - - -
-Go based REST API to upload and host images, utilizing an in-memory state management to deliver images quickly.
+Go based REST API to upload and host images & files, utilizing an in-memory state management to deliver images quickly. Images are converted to WebP either on upload or while fetching, ensuring images are optimized to smaller sizes and delievered faster.
+
+### Important Note: Currently all files uploaded get assigned a unique UUID so be sure to save this ID to use access the file.
 
 
 ## Env Variables
+The following is just filled with default values, these can be customized to your own extent.
 ```dotenv
 SECRET="" // Secret for cookie sessions
+PORT=3000 // Port server runs on
 
-REDIS_ADD="" // Redis address and port: localhost:6379
-REDIS_PAS="" // Password for redis
+REDIS_HOST="" // Redis address and port: localhost:6379
+REDIS_PASS="" // Password for redis
+REDIS_DB=0 // 0-16 are the available databases in Redis
 
-KEY="" // Key for uploading screenshots
+DOMAIN="localhost" // This is very important to set for uploading files, this will be a part of the return link to access the file through ImgVerter
+
+UPLOAD_KEY="" // Key for uploading images & files
+PUBLIC_FOLDER="/public/" // If ImgVerter is run inside Docker then this should be an absolute path
+
+// Upload Settings
+UPLOAD_ALLOWED_FILE_TYPES=png,jpg,gif // Comma-seperated file types
+UPLOAD_MAX_FILE_SIZE=5 // Values in MB only
 ```
 
 ## Roadmap
-- Image uploader and handler (20/6/24 Completed)
 - Video uploader with conversion to m3u8
 - Login session handler
-- Ability to convert images to whatever is needed
-- Some in-memory server like redis (10/6/24 Completed)
 - Ability to create users or some sort of way to limit admin access
+- Perceptual Hashing to determine if an image was already uploaded or not
+- More configs
