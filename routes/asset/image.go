@@ -17,7 +17,7 @@ func FetchImage(c *gin.Context) {
 
 	filePath := util.Config.PublicFolder
 
-	filePath = path.Clean(filePath + "/i/" + fileId)
+	filePath = path.Clean(filePath + "/images/" + fileId)
 
 	existsWebP := util.WebpExists(filePath)
 
