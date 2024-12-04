@@ -28,7 +28,7 @@ func PostImage(c *gin.Context) {
 		ext := path.Ext(file.Filename)
 		fileName := fmt.Sprintf("%s%s", id, ext)
 		webFileName := fmt.Sprintf("%s%s", id, ext)
-		filePath := path.Clean(fmt.Sprintf("%s/i/%s%s", util.Config.PublicFolder, id, ext))
+		filePath := path.Clean(fmt.Sprintf("%s/images/%s%s", util.Config.PublicFolder, id, ext))
 
 		err = c.SaveUploadedFile(file, filePath)
 		if err != nil {
