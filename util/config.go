@@ -7,35 +7,35 @@ import (
 )
 
 type ConfigStruct struct {
-	CookieSecret string
-	Port int
-	RedisHost string
-	RedisPass string
-	RedisDb int
-	Domain string
-	UploadKey string
+	CookieSecret   string
+	Port           int
+	RedisHost      string
+	RedisPass      string
+	RedisDb        int
+	Domain         string
+	UploadKey      string
 	UploadSettings UploadSettings
-	PublicFolder string
+	PublicFolder   string
 }
 
 type UploadSettings struct {
 	AllowedFileTypes []string
-	MaxFileSize int // in MB !!!
+	MaxFileSize      int // in MB !!!
 }
 
 func ConfigInit() {
 	Config = &ConfigStruct{
 		CookieSecret: getEnv("SECRET", ""),
-		Port: getEnvAsInt("PORT", 3000),
-		RedisHost: getEnv("REDIS_HOST", "localhost:6379"),
-		RedisPass: getEnv("REDIS_PASS", ""),
-		RedisDb: getEnvAsInt("REDIS_DB", 1),
-		Domain: getEnv("DOMAIN", ""),
-		UploadKey: getEnv("UPLOAD_KEY", ""),
-		PublicFolder: getEnv("PUBLIC_FOLDER", ""),
+		Port:         getEnvAsInt("PORT", 3000),
+		RedisHost:    getEnv("REDIS_HOST", "localhost:6379"),
+		RedisPass:    getEnv("REDIS_PASS", ""),
+		RedisDb:      getEnvAsInt("REDIS_DB", 1),
+		Domain:       getEnv("DOMAIN", "localhost"),
+		UploadKey:    getEnv("UPLOAD_KEY", ""),
+		PublicFolder: getEnv("PUBLIC_FOLDER", "/public/"),
 		UploadSettings: UploadSettings{
-			AllowedFileTypes: strings.Split(getEnv("UPLOAD_ALLOWED_FILE_TYPES", ""), ","),
-			MaxFileSize: getEnvAsInt("UPLOAD_MAX_FILE_SIZE", 5),
+			AllowedFileTypes: strings.Split(getEnv("UPLOAD_ALLOWED_FILE_TYPES", "png,jpg,jpeg,gif,mp4"), ","),
+			MaxFileSize:      getEnvAsInt("UPLOAD_MAX_FILE_SIZE", 5),
 		},
 	}
 }
