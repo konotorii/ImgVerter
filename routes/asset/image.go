@@ -14,6 +14,7 @@ import (
 
 func FetchImage(c *gin.Context) {
 	fileId := c.Param("id")
+	enableWebP := c.Query("webp")
 
 	filePath := util.Config.PublicFolder
 
@@ -21,15 +22,17 @@ func FetchImage(c *gin.Context) {
 
 	existsWebP := util.WebpExists(filePath)
 
-	if existsWebP {
-		filePath = strings.Replace(filePath, path.Ext(filePath), ".webp", -1)
-	} else {
-		link, err := util.EncodeWebP(filePath)
-		if err != nil {
-			consola.Error(err)
-		}
-		if link != nil {
+	if util.Config.UploadSettings.EnableWebpConversion || enableWebP == "true" {
+		if existsWebP {
 			filePath = strings.Replace(filePath, path.Ext(filePath), ".webp", -1)
+		} else {
+			link, err := util.EncodeWebP(filePath)
+			if err != nil {
+				consola.Error(err)
+			}
+			if link != nil {
+				filePath = strings.Replace(filePath, path.Ext(filePath), ".webp", -1)
+			}
 		}
 	}
 
