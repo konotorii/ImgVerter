@@ -9,6 +9,7 @@ import (
 type ConfigStruct struct {
 	CookieSecret   string
 	Port           int
+	UseRedis       bool
 	RedisHost      string
 	RedisPass      string
 	RedisDb        int
@@ -27,6 +28,7 @@ type UploadSettings struct {
 func ConfigInit() {
 	Config = &ConfigStruct{
 		CookieSecret: getEnv("SECRET", ""),
+		UseRedis:     getEnvAsBool("USE_REDIS", false),
 		Port:         getEnvAsInt("PORT", 3000),
 		RedisHost:    getEnv("REDIS_HOST", "localhost:6379"),
 		RedisPass:    getEnv("REDIS_PASS", ""),
