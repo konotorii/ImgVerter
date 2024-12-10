@@ -19,8 +19,9 @@ type ConfigStruct struct {
 }
 
 type UploadSettings struct {
-	AllowedFileTypes []string
-	MaxFileSize      int // in MB !!!
+	AllowedFileTypes     []string
+	MaxFileSize          int // in MB !!!
+	EnableWebpConversion bool
 }
 
 func ConfigInit() {
@@ -34,8 +35,9 @@ func ConfigInit() {
 		UploadKey:    getEnv("UPLOAD_KEY", ""),
 		PublicFolder: getEnv("PUBLIC_FOLDER", "/public/"),
 		UploadSettings: UploadSettings{
-			AllowedFileTypes: strings.Split(getEnv("UPLOAD_ALLOWED_FILE_TYPES", "png,jpg,jpeg,gif,mp4"), ","),
-			MaxFileSize:      getEnvAsInt("UPLOAD_MAX_FILE_SIZE", 5),
+			AllowedFileTypes:     strings.Split(getEnv("UPLOAD_ALLOWED_FILE_TYPES", "png,jpg,jpeg,gif,mp4"), ","),
+			MaxFileSize:          getEnvAsInt("UPLOAD_MAX_FILE_SIZE", 5),
+			EnableWebpConversion: getEnvAsBool("UPLOAD_WEBP_CONVERSION", true),
 		},
 	}
 }
@@ -53,6 +55,15 @@ func getEnv(key string, defaultVal string) string {
 func getEnvAsInt(name string, defaultVal int) int {
 	valueStr := getEnv(name, "")
 	if value, err := strconv.Atoi(valueStr); err == nil {
+		return value
+	}
+
+	return defaultVal
+}
+
+func getEnvAsBool(name string, defaultVal bool) bool {
+	valueStr := getEnv(name, "")
+	if value, err := strconv.ParseBool(valueStr); err == nil {
 		return value
 	}
 
