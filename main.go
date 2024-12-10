@@ -25,6 +25,8 @@ func init() {
 	if util.Config.UseRedis {
 		_, _ = connectors.RedisDatabaseInit()
 	}
+
+	connectors.DatabaseInit()
 }
 
 func main() {
