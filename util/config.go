@@ -7,16 +7,18 @@ import (
 )
 
 type ConfigStruct struct {
-	CookieSecret   string
-	Port           int
-	UseRedis       bool
-	RedisHost      string
-	RedisPass      string
-	RedisDb        int
-	Domain         string
-	UploadKey      string
-	UploadSettings UploadSettings
-	PublicFolder   string
+	CookieSecret     string
+	Port             int
+	UseRedis         bool
+	DatabaseDriver   string
+	RedisHost        string
+	RedisPass        string
+	RedisDb          int
+	Domain           string
+	UploadKey        string
+	UploadSettings   UploadSettings
+	DatabaseSettings DatabaseSettings
+	PublicFolder     string
 }
 
 type UploadSettings struct {
@@ -25,21 +27,29 @@ type UploadSettings struct {
 	EnableWebpConversion bool
 }
 
+type DatabaseSettings struct {
+	Path string /// relative to application
+}
+
 func ConfigInit() {
 	Config = &ConfigStruct{
-		CookieSecret: getEnv("SECRET", ""),
-		UseRedis:     getEnvAsBool("USE_REDIS", false),
-		Port:         getEnvAsInt("PORT", 3000),
-		RedisHost:    getEnv("REDIS_HOST", "localhost:6379"),
-		RedisPass:    getEnv("REDIS_PASS", ""),
-		RedisDb:      getEnvAsInt("REDIS_DB", 1),
-		Domain:       getEnv("DOMAIN", "localhost"),
-		UploadKey:    getEnv("UPLOAD_KEY", ""),
-		PublicFolder: getEnv("PUBLIC_FOLDER", "/public/"),
+		CookieSecret:   getEnv("SECRET", ""),
+		UseRedis:       getEnvAsBool("USE_REDIS", false),
+		DatabaseDriver: getEnv("DATABASE_DRIVER", "SQLITE"),
+		Port:           getEnvAsInt("PORT", 3000),
+		RedisHost:      getEnv("REDIS_HOST", "localhost:6379"),
+		RedisPass:      getEnv("REDIS_PASS", ""),
+		RedisDb:        getEnvAsInt("REDIS_DB", 1),
+		Domain:         getEnv("DOMAIN", "localhost"),
+		UploadKey:      getEnv("UPLOAD_KEY", ""),
+		PublicFolder:   getEnv("PUBLIC_FOLDER", "/public/"),
 		UploadSettings: UploadSettings{
 			AllowedFileTypes:     strings.Split(getEnv("UPLOAD_ALLOWED_FILE_TYPES", "png,jpg,jpeg,gif,mp4"), ","),
 			MaxFileSize:          getEnvAsInt("UPLOAD_MAX_FILE_SIZE", 5),
 			EnableWebpConversion: getEnvAsBool("UPLOAD_WEBP_CONVERSION", true),
+		},
+		DatabaseSettings: DatabaseSettings{
+			Path: "./private/" + getEnv("DATABASE_PATH", "imgverter.db"),
 		},
 	}
 }
