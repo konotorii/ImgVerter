@@ -7,6 +7,7 @@ import (
 )
 
 type ConfigStruct struct {
+	TimeZone         string
 	CookieSecret     string
 	Port             int
 	UseRedis         bool
@@ -29,10 +30,16 @@ type UploadSettings struct {
 
 type DatabaseSettings struct {
 	Path string /// relative to application
+	Host string
+	Port int
+	User string
+	Pass string
+	Name string
 }
 
 func ConfigInit() {
 	Config = &ConfigStruct{
+		TimeZone:       getEnv("TZ", "UTC"),
 		CookieSecret:   getEnv("SECRET", ""),
 		UseRedis:       getEnvAsBool("USE_REDIS", false),
 		DatabaseDriver: getEnv("DATABASE_DRIVER", "SQLITE"),
@@ -50,6 +57,11 @@ func ConfigInit() {
 		},
 		DatabaseSettings: DatabaseSettings{
 			Path: "./private/" + getEnv("DATABASE_PATH", "imgverter.db"),
+			Host: getEnv("DATABASE_HOST", "localhost"),
+			Port: getEnvAsInt("DATABASE_PORT", 0),
+			User: getEnv("DATABASE_USER", "admin"),
+			Pass: getEnv("DATABASE_PASS", "admin"),
+			Name: getEnv("DATABASE_NAME", "imgverter"),
 		},
 	}
 }
