@@ -18,5 +18,9 @@ func DatabaseInit() {
 		DB = MySqlInit()
 	}
 
+	if DB == nil {
+		return
+	}
+
 	DB.AutoMigrate(&types.DBImage{})
 }
