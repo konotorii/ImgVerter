@@ -9,14 +9,11 @@ archives:
 
 builds:
   - env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - linux
-      - windows
-      - darwin
     goarch:
       - amd64
-      - arm64
     ldflags:
       - -s -w -X github.com/prometheus/common/version.Version={{.Version}}
       - -s -w -X github.com/prometheus/common/version.Revision={{.Commit}}
