@@ -44,6 +44,8 @@ func engine() *gin.Engine {
 
 	r.GET("/i/:id", asset.FetchImage)
 
+	r.NoRoute(asset.FetchRest)
+
 	r.POST("/upload/img", upload.PostImage)
 	r.POST("/upload/file", upload.PostFile)
 
