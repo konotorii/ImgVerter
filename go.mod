@@ -1,6 +1,8 @@
 module imgverter
 
-go 1.22
+go 1.22.2
+
+toolchain go1.23.4
 
 require (
 	github.com/TwiN/go-color v1.4.1
