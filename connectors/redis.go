@@ -2,15 +2,14 @@ package connectors
 
 import (
 	"context"
-	"errors"
-	"github.com/redis/go-redis/v9"
 	"imgverter/util"
+
+	"github.com/redis/go-redis/v9"
 )
 
 var (
-	RsErrNil       = errors.New("no matching record found in redis database")
-	Ctx            = context.TODO()
-	RedisDB *redis.Client
+	RedixCTX = context.TODO()
+	RedisDB  *redis.Client
 )
 
 func RedisDatabaseInit() (*redis.Client, error) {
@@ -19,7 +18,7 @@ func RedisDatabaseInit() (*redis.Client, error) {
 		Password: util.Config.RedisPass,
 		DB:       util.Config.RedisDb,
 	})
-	if err := RedisDB.Ping(Ctx).Err(); err != nil {
+	if err := RedisDB.Ping(RedixCTX).Err(); err != nil {
 		return nil, err
 	}
 	return RedisDB, nil
