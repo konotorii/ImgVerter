@@ -9,7 +9,7 @@ archives:
 
 builds:
   - env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
     goos:
       - linux
     goarch:
@@ -39,34 +39,34 @@ dockers:
       - --label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/konotorii/imgverter/main/README.md
       - --label=io.artifacthub.package.keywords=golang,image,cdn,uploader
       - --label=io.artifacthub.package.license=MIT
-  - image_templates:
-      - "ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64"
-    goarch: arm64
-    dockerfile: Dockerfile
-    use: buildx
-    build_flag_templates:
-      - --platform=linux/arm64/v8
-      - --label=org.opencontainers.image.licenses=MIT
-      - --label=org.opencontainers.image.description=ImgVerter
-      - --label=org.opencontainers.image.created={{.Date}}
-      - --label=org.opencontainers.image.name={{.ProjectName}}
-      - --label=org.opencontainers.image.revision={{.FullCommit}}
-      - --label=org.opencontainers.image.version={{.Version}}
-      - --label=org.opencontainers.image.source={{.GitURL}}
-      - --label=io.artifacthub.package.maintainers=[{"name":"Konotorii","email":"konotorii@konotorii.com"}]
-      - --label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/konotorii/imgverter/main/README.md
-      - --label=io.artifacthub.package.keywords=golang,image,cdn,uploader
-      - --label=io.artifacthub.package.license=MIT
+  # - image_templates:
+  #     - "ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64"
+  #   goarch: arm64
+  #   dockerfile: Dockerfile
+  #   use: buildx
+  #   build_flag_templates:
+  #     - --platform=linux/arm64/v8
+  #     - --label=org.opencontainers.image.licenses=MIT
+  #     - --label=org.opencontainers.image.description=ImgVerter
+  #     - --label=org.opencontainers.image.created={{.Date}}
+  #     - --label=org.opencontainers.image.name={{.ProjectName}}
+  #     - --label=org.opencontainers.image.revision={{.FullCommit}}
+  #     - --label=org.opencontainers.image.version={{.Version}}
+  #     - --label=org.opencontainers.image.source={{.GitURL}}
+  #     - --label=io.artifacthub.package.maintainers=[{"name":"Konotorii","email":"konotorii@konotorii.com"}]
+  #     - --label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/konotorii/imgverter/main/README.md
+  #     - --label=io.artifacthub.package.keywords=golang,image,cdn,uploader
+  #     - --label=io.artifacthub.package.license=MIT
 
 docker_manifests:
   - name_template: 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}'
     image_templates:
       - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-amd64'
-      - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64'
+      # - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64'
   - name_template: 'ghcr.io/konotorii/{{ .ProjectName }}:latest'
     image_templates:
       - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-amd64'
-      - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64'
+      # - 'ghcr.io/konotorii/{{ .ProjectName }}:{{ .Version }}-arm64'
 
 source:
   enabled: true
