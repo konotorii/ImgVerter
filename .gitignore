@@ -25,3 +25,4 @@ go.work
 docker-compose.yml
 
 *.db
+.bin
