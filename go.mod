@@ -10,12 +10,15 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/konotorii/go-consola v0.1.1
+	github.com/nickalie/go-webpbin v0.0.0-20220110095747-f10016bf2dc1
 	github.com/redis/go-redis/v9 v9.5.3
 )
 
 require (
 	github.com/TwiN/go-color v1.4.1 // indirect
+	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.5.5 // indirect
@@ -24,7 +27,13 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
+	github.com/mholt/archiver v3.1.1+incompatible // indirect
+	github.com/nickalie/go-binwrapper v0.0.0-20190114141239-525121d43c84 // indirect
+	github.com/nwaples/rardecode v1.1.3 // indirect
+	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
+	github.com/ulikunitz/xz v0.5.12 // indirect
+	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
 	golang.org/x/sync v0.9.0 // indirect
 )
 
@@ -46,7 +55,6 @@ require (
 	github.com/gorilla/sessions v1.2.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
-	github.com/kolesa-team/go-webp v1.0.4
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
