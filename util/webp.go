@@ -5,13 +5,13 @@ import (
 	"image"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"os"
 	"path"
 	"strings"
 
-	"github.com/kolesa-team/go-webp/encoder"
-	"github.com/kolesa-team/go-webp/webp"
 	"github.com/konotorii/go-consola"
+	"github.com/nickalie/go-webpbin"
 )
 
 func EncodeWebP(filePath string) (*string, error) {
@@ -31,11 +31,11 @@ func EncodeWebP(filePath string) (*string, error) {
 		return nil, err
 	}
 
-	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 75)
-	if err != nil {
-		consola.Error(err)
-		return nil, err
-	}
+	// options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 75)
+	// if err != nil {
+	// 	consola.Error(err)
+	// 	return nil, err
+	// }
 
 	fileName := strings.Replace(filePath, ext, ".webp", -1)
 
@@ -63,9 +63,9 @@ func EncodeWebP(filePath string) (*string, error) {
 		}
 	}
 
-	if err := webp.Encode(output, img, options); err != nil {
-		consola.Error(err)
-		return nil, err
+	if err := webpbin.Encode(output, img); err != nil {
+		output.Close()
+		log.Fatal(err)
 	}
 
 	return &fileName, nil
