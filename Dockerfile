@@ -4,4 +4,5 @@ COPY imgverter \
 	/usr/bin/imgverter
 ENV SKIP_DOWNLOAD=true
 ENV VENDOR_PATH=/bin/webp
+RUN chmod -R 777 /bin/webp
 ENTRYPOINT ["/usr/bin/imgverter"]
