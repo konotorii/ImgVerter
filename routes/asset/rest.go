@@ -17,9 +17,14 @@ func FetchRest(c *gin.Context) {
 
 	enableWebP := c.Query("webp")
 
+	println(enableWebP)
+
+	u, _ := url.Parse(fileId)
+	result := u.Path
+
 	filePath := util.Config.PublicFolder
 
-	filePath = path.Clean(filePath + fileId)
+	filePath = path.Clean(filePath + result)
 
 	mtype, err := mimetype.DetectFile(filePath)
 
