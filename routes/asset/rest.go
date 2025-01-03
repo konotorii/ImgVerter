@@ -39,6 +39,14 @@ func FetchRest(c *gin.Context) {
 		if util.Config.UploadSettings.EnableWebpConversion || enableWebP == "true" {
 			if existsWebP {
 				filePath = strings.Replace(filePath, path.Ext(filePath), ".webp", -1)
+
+				mtype, err = mimetype.DetectFile(filePath)
+				if err != nil {
+					consola.Error("Getting mimetype error", err)
+
+					c.Status(500)
+					return
+				}
 			} else {
 				link, err := util.EncodeWebP(filePath)
 				if err != nil {
@@ -46,6 +54,14 @@ func FetchRest(c *gin.Context) {
 				}
 				if link != nil {
 					filePath = strings.Replace(filePath, path.Ext(filePath), ".webp", -1)
+
+					mtype, err = mimetype.DetectFile(filePath)
+					if err != nil {
+						consola.Error("Getting mimetype error", err)
+
+						c.Status(500)
+						return
+					}
 				}
 			}
 		}
