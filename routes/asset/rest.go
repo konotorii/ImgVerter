@@ -1,6 +1,7 @@
 package asset
 
 import (
+	"fmt"
 	"imgverter/util"
 	"net/url"
 	"os"
@@ -66,6 +67,8 @@ func FetchRest(c *gin.Context) {
 			}
 		}
 	}
+
+	consola.Info(fmt.Sprintf("Fetching %s | %s | %s", result, c.Request.UserAgent(), c.RemoteIP()))
 
 	buf, err := os.ReadFile(filePath)
 	if err != nil {
