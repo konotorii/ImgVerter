@@ -17,8 +17,6 @@ func FetchRest(c *gin.Context) {
 
 	enableWebP := c.Query("webp")
 
-	println(enableWebP)
-
 	u, _ := url.Parse(fileId)
 	result := u.Path
 
