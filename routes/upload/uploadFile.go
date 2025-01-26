@@ -13,6 +13,11 @@ import (
 func PostFile(c *gin.Context) {
 	key := c.Query("key")
 
+	if len(util.Config.UploadKey) < 6 {
+		c.Status(403)
+		return
+	}
+
 	if key == util.Config.UploadKey {
 		file, _ := c.FormFile("file")
 		consola.Log(file.Filename)
